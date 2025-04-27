@@ -1,0 +1,7 @@
+# Request
+string waypoint_id       # Unique identifier for the new waypoint
+
+---
+# Response
+bool success            # True if waypoint creation was successful
+string message          # Informative message (e.g., success or error reason) 
