@@ -1,0 +1,27 @@
+# Common parameters for Waypoint Manager and Navigator
+
+shared_nav_params: &shared_nav_params
+  # Path to the waypoints file.
+  waypoint_file_path: "waypoints.yaml"
+  # The fixed frame used for waypoint coordinates.
+  map_frame: "map"
+  # The base frame of the robot.
+  robot_base_frame: "base_link"
+
+waypoint_manager:
+  ros__parameters:
+    # Distance threshold in meters for automatic waypoint creation.
+    auto_creation_distance_threshold: 2.0
+    # Angle threshold in degrees for automatic waypoint creation.
+    auto_creation_angle_threshold_deg: 22.5
+    # Proximity threshold in meters to check for existing waypoints.
+    proximity_threshold: 0.5
+
+    <<: *shared_nav_params
+
+waypoint_navigator:
+  ros__parameters:
+    # Maximum distance between waypoints in meters to consider them directly connected for path planning.
+    waypoint_connection_threshold: 5.0 
+
+    <<: *shared_nav_params 

@@ -27,31 +27,35 @@ pkg_check_modules(YAML_CPP REQUIRED yaml-cpp)
 # Add service definition
 rosidl_generate_interfaces(${PROJECT_NAME}
   "srv/CreateWaypoint.srv"
+  "action/NavigateThroughWaypoints.action"
 )
 
-# List all source files needed for the waypoint_manager library
-set(WAYPOINT_MANAGER_SOURCES
+# List all source files for the shared library
+set(WAYPOINT_LIB_SOURCES
   src/waypoint_manager.cpp
-  src/waypoint_utils.cpp 
+  src/waypoint_navigator.cpp
+  src/waypoint_utils.cpp
+  src/path_planner.cpp
 )
 
-# Changed from add_executable to add_library for component node
-add_library(waypoint_manager SHARED ${WAYPOINT_MANAGER_SOURCES})
+# Create a single shared library for all components
+add_library(waypoint_navigation_lib SHARED ${WAYPOINT_LIB_SOURCES})
 
-target_include_directories(waypoint_manager PUBLIC
+target_include_directories(waypoint_navigation_lib PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/rosidl_generator_cpp> # Include for generated headers
   $<INSTALL_INTERFACE:include/rosidl_generator_cpp> # Include for generated headers (install)
   ${YAML_CPP_INCLUDE_DIRS} # Add yaml-cpp include directories
 )
-target_compile_features(waypoint_manager PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
+target_compile_features(waypoint_navigation_lib PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
 
-# Register the component
-rclcpp_components_register_nodes(waypoint_manager "waypoint_navigation::WaypointManager")
+# Register the components from the library
+rclcpp_components_register_nodes(waypoint_navigation_lib "waypoint_navigation::WaypointManager")
+rclcpp_components_register_nodes(waypoint_navigation_lib "waypoint_navigation::WaypointNavigator")
 
 ament_target_dependencies(
-  waypoint_manager
+  waypoint_navigation_lib
   "rclcpp"
   "rclcpp_action"
   "rclcpp_components"
@@ -62,35 +66,35 @@ ament_target_dependencies(
   "tf2"
   "tf2_ros"
   "tf2_geometry_msgs"
-  "rcl_interfaces" # Added rcl_interfaces
+  "rcl_interfaces"
 )
 
-# Link against generated C++ typesupport library
+# Link library against generated C++ typesupport library
 rosidl_get_typesupport_target(cpp_typesupport_target ${PROJECT_NAME} "rosidl_typesupport_cpp")
-target_link_libraries(waypoint_manager "${cpp_typesupport_target}")
+target_link_libraries(waypoint_navigation_lib "${cpp_typesupport_target}")
 
-# Also link against C typesupport if necessary (often required indirectly)
+# Also link library against C typesupport if necessary (often required indirectly)
 rosidl_get_typesupport_target(c_typesupport_target ${PROJECT_NAME} "rosidl_typesupport_c")
-target_link_libraries(waypoint_manager "${c_typesupport_target}")
+target_link_libraries(waypoint_navigation_lib "${c_typesupport_target}")
 
-# Explicitly link yaml-cpp library using pkg-config results
-target_link_libraries(waypoint_manager ${YAML_CPP_LIBRARIES})
+# Explicitly link library against yaml-cpp library using pkg-config results
+target_link_libraries(waypoint_navigation_lib ${YAML_CPP_LIBRARIES})
 
-# Install the library, not the executable
-install(TARGETS waypoint_manager
+# Install the library
+install(TARGETS waypoint_navigation_lib
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin)
 
-# Install component registration info - Temporarily disabled
+# Install component registration info (can be generated automatically now)
 # install(
 #     FILES ${CMAKE_CURRENT_BINARY_DIR}/cmake/node_components.xml
 #     DESTINATION share/${PROJECT_NAME}/cmake
 # )
 
-# Install service definition
+# Install service and action definitions
 install(
-  DIRECTORY srv
+  DIRECTORY srv action
   DESTINATION share/${PROJECT_NAME}/
 )
 
@@ -102,14 +106,10 @@ install(
 
 # Install config file(s)
 install(
-  FILES config/waypoint_params.yaml # Install specific file
+  FILES 
+    config/nav_params.yaml # Install combined params
+    config/nav2_waypoints.rviz # Keep Rviz config install
   DESTINATION share/${PROJECT_NAME}/config # Destination directory
-)
-
-# Install Rviz config file
-install(
-  FILES config/nav2_waypoints.rviz
-  DESTINATION share/${PROJECT_NAME}/config
 )
 
 # Install headers

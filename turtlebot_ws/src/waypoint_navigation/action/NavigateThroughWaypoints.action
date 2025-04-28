@@ -1,0 +1,13 @@
+# Goal definition
+string target_waypoint_id
+
+---
+# Result definition
+bool success # True if navigation sequence completed successfully
+string message
+
+---
+# Feedback definition
+string current_waypoint_id # The ID of the waypoint the robot is currently navigating towards
+float32 distance_remaining # Estimated distance to the current intermediate waypoint (if available from Nav2)
+float32 estimated_time_remaining # Estimated time to the current intermediate waypoint (if available from Nav2) 

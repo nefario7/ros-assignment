@@ -1,0 +1,92 @@
+waypoints:
+  - id: auto_wp_6
+    frame_id: map
+    pose:
+      position:
+        x: 2.8414465522281223
+        y: -0.064298096799808163
+        z: 0
+      orientation:
+        x: 0
+        y: 0
+        z: 0.98327754755284646
+        w: -0.18211332866778221
+    type: AUTOMATIC
+  - id: point_2
+    frame_id: map
+    pose:
+      position:
+        x: 2.6171457180606716
+        y: -0.73839747787677401
+        z: 0.01
+      orientation:
+        x: 0
+        y: 0
+        z: -0.67917975534022712
+        w: 0.73397197489821719
+    type: MANUAL
+  - id: auto_wp_4
+    frame_id: map
+    pose:
+      position:
+        x: 3.3048185521917803
+        y: 0.87670413619172849
+        z: 0
+      orientation:
+        x: 0
+        y: 0
+        z: -0.19751632829383067
+        w: 0.98029959709127878
+    type: AUTOMATIC
+  - id: auto_wp_5
+    frame_id: map
+    pose:
+      position:
+        x: 3.3981161614560205
+        y: 0.03981876789083881
+        z: 0
+      orientation:
+        x: 0
+        y: 0
+        z: -0.83530278946669367
+        w: 0.54979018717066963
+    type: AUTOMATIC
+  - id: point_1
+    frame_id: map
+    pose:
+      position:
+        x: 2.5098975599156401
+        y: 0.91249245727074824
+        z: 0.01
+      orientation:
+        x: 0
+        y: 0
+        z: 0.0048403984186549528
+        w: 0.99998828520295613
+    type: MANUAL
+  - id: auto_wp_2
+    frame_id: map
+    pose:
+      position:
+        x: 1.5197083966388041
+        y: 0.85755748655009456
+        z: 0
+      orientation:
+        x: 0
+        y: 0
+        z: 0.38672342128004927
+        w: 0.92219574680945771
+    type: AUTOMATIC
+  - id: auto_wp_1
+    frame_id: map
+    pose:
+      position:
+        x: 1.0601055433092035
+        y: 0.074810001985319466
+        z: 0
+      orientation:
+        x: 0
+        y: 0
+        z: 0.19712103028202954
+        w: 0.98037916104971923
+    type: AUTOMATIC
