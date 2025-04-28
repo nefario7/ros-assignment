@@ -9,22 +9,23 @@ def generate_launch_description():
     pkg_name = 'waypoint_navigation'
     pkg_share = get_package_share_directory(pkg_name)
 
-    params_file = os.path.join(pkg_share, 'config', 'waypoint_params.yaml')
+    params_file = os.path.join(pkg_share, 'config', 'waypoint_navigator_params.yaml')
 
-    manager_node = ComposableNode(
+    navigator_node = ComposableNode(
         package=pkg_name,
-        plugin='waypoint_navigation::WaypointManager', 
-        name='waypoint_manager',                    
+        plugin='waypoint_navigation::WaypointNavigator', 
+        name='waypoint_navigator',                   
         parameters=[params_file],
         extra_arguments=[{'use_intra_process_comms': True}] 
     )
+    
 
     container = ComposableNodeContainer(
-        name='waypoint_nav_container',
+        name='waypoint_nav_nav_container', 
         namespace='',
         package='rclcpp_components',
         executable='component_container',
-        composable_node_descriptions=[manager_node],
+        composable_node_descriptions=[navigator_node],
         output='screen',
     )
 
